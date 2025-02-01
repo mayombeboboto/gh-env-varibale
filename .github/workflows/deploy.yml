@@ -30,6 +30,12 @@ jobs:
           npm install -g wait-on
       - name: Run server
         run: npm start & npx wait-on http://127.0.0.1:${{ env.MONGODB_PORT }}
+      - name: Check server status
+        run: |
+          if ! lsof -i:${{ env.MONGODB_PORT }}; then
+            echo "Server is not running"
+            exit 1
+          fi
       - name: Run tests
         run: npm test
       - name: Output information
